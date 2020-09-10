@@ -5,6 +5,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-image: url("https://www.thestatesman.com/wp-content/uploads/2019/10/QT-ration-cards.jpg");
+  background-color: black;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
 }
 
 code {
@@ -22,6 +29,8 @@ code {
   align-content: center;
   justify-content: center;
   vertical-align: middle;
+  background-color: rgb(255, 255, 255, 0.5);
+  padding: 2%;
 }
 
 .parent {
@@ -85,4 +94,52 @@ h3 {
 }
 .icon {
   height: 20px;
+}
+
+.cartParent {
+  width: 300px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.cartImg {
+  min-width: 100%;
+  height: 100%;
+  background-color: black;
+  background-position: center;
+  background-size: cover;
+}
+.cartp {
+  margin: 0;
+  display: block;
+  font-size: 1.2rem;
+}
+.itemDetCart {
+  padding-left: 10%;
+  width: 400px;
+}
+
+h2 {
+  display: block;
+}
+
+.cart {
+  min-height: 100%;
+  width: 100%;
+  position: absolute;
+  padding: 5%;
+  background: transparent;
+}
+
+.trans {
+  background: transparent;
+}
+.cartItem {
+  background-color: rgb(255, 255, 255, 0.5);
+  padding: 2%;
+}
+.navbar-bg {
+  background-color: rgb(0, 0, 0, 0.5);
 }
