@@ -8,6 +8,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import Profile from "./Profile";
 
 function Main() {
   const [total, setTotal] = useState(0);
@@ -71,6 +72,9 @@ function Main() {
               <LinkContainer to="/shop">
                 <Nav.Link>Shop</Nav.Link>
               </LinkContainer>
+              <LinkContainer to="/profile">
+                <Nav.Link>Profile</Nav.Link>
+              </LinkContainer>
             </Nav>
 
             <Nav className="ml-auto">
@@ -95,6 +99,7 @@ function Main() {
           }}
         />
         <Route path="/cart" render={() => <Cart items={cart} />} />
+        <Route path="/profile" render={Profile} />
         <Route path="/home" render={LandingPage} />
         <Route
           path="/shop"
