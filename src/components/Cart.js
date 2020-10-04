@@ -1,5 +1,6 @@
 import React from "react";
-import { Jumbotron } from "react-bootstrap";
+import { Button, Jumbotron } from "react-bootstrap";
+import { Link } from "react-router-dom";
 function Cart(props) {
   var l = props.items.length === 0;
   return l ? (
@@ -44,6 +45,13 @@ function Cart(props) {
           </table>
         </div>
       ))}
+      <div className="cartItem">
+        <Link to="/pay">
+          <Button size="lg" variant="info">
+            Buy Now
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react'
+
 function LandingPage () {
-  return <div>Hey</div>
+  return <div>hey</div>
 }
 
 export default LandingPage
