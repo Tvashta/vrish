@@ -2,7 +2,9 @@ import React from "react";
 import { PieChart } from "react-minimal-pie-chart";
 import { Table } from "react-bootstrap";
 function LandingPage(props) {
-  const { user, items } = props;
+  let { user, items } = props;
+  if (user.name === undefined || user.name.length === 0)
+    user = { ...user, name: "Scar" };
   return (
     <div className="userscreen">
       <h1 className="center">Welcome {user.name}</h1>

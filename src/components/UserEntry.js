@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import img2 from "../images/image-2.png";
+import img2 from "../images/boy.png";
 
 function UserEntry(props) {
   const [user, setUserDetails] = useState({

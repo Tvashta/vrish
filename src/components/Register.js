@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import img1 from "../images/image-1.png";
-import img2 from "../images/image-2.png";
+import img1 from "../images/girl.png";
+import img2 from "../images/boy.png";
 
 function Register(props) {
   const [reg, isregActive] = useState(true);
