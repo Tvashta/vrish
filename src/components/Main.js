@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import Product from "./Product";
 import Cart from "./Cart";
+import Register from "./Register";
 import LandingPage from "./LandingPage";
 import Shop from "./Shop";
 import Pay from "./Pay";
+import UserEntry from "./UserEntry";
 import { Navbar, Nav } from "react-bootstrap";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -13,7 +14,8 @@ import Profile from "./Profile";
 function Main() {
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState([]);
-  const [isUserAuthenticated, setUserAuthentication] = useState(true);
+  const [isUserAuthenticated, setUserAuthentication] = useState(false);
+  const [user, setUserDetails] = useState({});
   const items = [
     {
       id: 1,
@@ -23,8 +25,8 @@ function Main() {
       added: false,
       quantity: 0,
       allowedQuantity: 5,
-      qtyConsumed: 0,
-      price: 10,
+      qtyConsumed: 2,
+      price: 60,
     },
     {
       id: 2,
@@ -34,10 +36,48 @@ function Main() {
       added: false,
       quantity: 0,
       allowedQuantity: 2,
+      qtyConsumed: 1,
+      price: 50,
+    },
+    {
+      id: 3,
+      name: "Sugar",
+      url:
+        "https://sensorex.com/wp-content/uploads/2017/08/sugar-e1502291655515.jpg",
+      added: false,
+      quantity: 0,
+      allowedQuantity: 2,
+      qtyConsumed: 1,
+      price: 40,
+    },
+    {
+      id: 4,
+      name: "Toor Daal",
+      url:
+        "https://cdn.shopify.com/s/files/1/1751/6601/products/Toor_Daal_1400x.jpg?v=1527359086",
+      added: false,
+      quantity: 0,
+      allowedQuantity: 3,
       qtyConsumed: 0,
-      price: 20,
+      price: 40,
+    },
+    {
+      id: 5,
+      name: "Cooking Oil",
+      url:
+        "https://m.economictimes.com/thumb/msid-72250379,width-1200,height-900,resizemode-4,imgsize-573232/cooking-oil.jpg",
+      added: false,
+      quantity: 0,
+      allowedQuantity: 2,
+      qtyConsumed: 0,
+      price: 50,
     },
   ];
+
+  function setDetails(e) {
+    setUserDetails(e);
+    console.log(e);
+  }
 
   function addItem(item) {
     if (item.quantity === 0) item.quantity = 1;
@@ -62,31 +102,33 @@ function Main() {
   return (
     <div>
       <BrowserRouter>
-        <Navbar className="navbar-bg" variant="dark">
-          <Navbar.Brand href="#home">FPS</Navbar.Brand>
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <LinkContainer to="/home">
-                <Nav.Link>Home</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/shop">
-                <Nav.Link>Shop</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/profile">
-                <Nav.Link>Profile</Nav.Link>
-              </LinkContainer>
-            </Nav>
+        {isUserAuthenticated && (
+          <Navbar className="navbar-bg" variant="dark">
+            <Navbar.Brand href="#home">FPS</Navbar.Brand>
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <LinkContainer to="/home">
+                  <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/shop">
+                  <Nav.Link>Shop</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/profile">
+                  <Nav.Link>Profile</Nav.Link>
+                </LinkContainer>
+              </Nav>
 
-            <Nav className="ml-auto">
-              <LinkContainer to="/cart">
-                <Nav.Link>
-                  <ShoppingCartIcon />
-                  Rs {total}
-                </Nav.Link>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+              <Nav className="ml-auto">
+                <LinkContainer to="/cart">
+                  <Nav.Link>
+                    <ShoppingCartIcon />
+                    Rs {total}
+                  </Nav.Link>
+                </LinkContainer>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+        )}
         <Route
           exact
           path="/"
@@ -94,18 +136,40 @@ function Main() {
             return isUserAuthenticated ? (
               <Redirect to="/home" />
             ) : (
-              <Redirect to="/login" />
+              <Redirect to="/register" />
             );
           }}
         />
         <Route path="/cart" render={() => <Cart items={cart} />} />
-        <Route path="/profile" render={Profile} />
-        <Route path="/home" render={LandingPage} />
+        <Route
+          path="/register"
+          render={() => (
+            <Register
+              setDetails={setDetails}
+              userAuth={setUserAuthentication}
+            />
+          )}
+        />
+        <Route
+          path="/home"
+          render={() => <LandingPage user={user} items={items} />}
+        />
         <Route
           path="/shop"
           render={() => <Shop items={items} addItem={addItem} />}
         />
         <Route path="/pay" render={() => <Pay cart={cart} total={total} />} />
+        <Route
+          path="/userEntry"
+          render={() => (
+            <UserEntry
+              user={user}
+              setDetails={setDetails}
+              userAuth={setUserAuthentication}
+            />
+          )}
+        />
+        <Route path="/profile" render={() => <Profile userDet={user} />} />
       </BrowserRouter>
     </div>
   );

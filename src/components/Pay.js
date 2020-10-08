@@ -1,11 +1,23 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Form, Row, Col } from "react-bootstrap";
+import { Button, ButtonGroup, Form, Col } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 function Pay(props) {
-  const { cart, total } = props;
+  const { total } = props;
   const [startDate, setStartDate] = useState(new Date());
   const [cashOrCard, setCashOrCard] = useState(null);
+  const [cardnoFlag, setCardFlag] = useState(false);
+  const [cardError, setCardError] = useState("");
+  function handleCardNo(e) {
+    let val = e.target.value;
+    if (val.length === 0) {
+      setCardFlag(true);
+      setCardError("Card Number can't be empty");
+    } else if (val.length !== 16) {
+      setCardFlag(true);
+      setCardError("Invalid Card Number");
+    }
+  }
   return (
     <div className="pay">
       <div className="cartItem">
@@ -21,12 +33,17 @@ function Pay(props) {
         </ButtonGroup>
       </div>
 
-      {cashOrCard == 1 ? (
+      {cashOrCard === 1 ? (
         <div className="cartItem">
           <Form>
             <Form.Group controlId="cardno">
               <Form.Label>Card Number</Form.Label>
-              <Form.Control type="number" placeholder="Enter card number" />
+              {cardnoFlag && <Form.Text>{cardError}</Form.Text>}
+              <Form.Control
+                type="number"
+                onChange={(e) => handleCardNo(e)}
+                placeholder="Enter card number"
+              />
             </Form.Group>
             <Form.Group controlId="cardname">
               <Form.Label>Name on the Card</Form.Label>

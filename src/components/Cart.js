@@ -26,8 +26,8 @@ function Cart(props) {
                   </div>
                 </td>
                 <td className="itemDetCart">
-                  <h2>{item.name}</h2>
-                  <h2>Rs {item.price * item.quantity}</h2>
+                  <h2 className="center">{item.name}</h2>
+                  <h2 className="center">Rs {item.price * item.quantity}</h2>
                   <p className="cartp">
                     <b>Price: </b>
                     {item.price}

@@ -1,8 +1,11 @@
 import React from "react";
-import { Button } from "react-bootstrap";
-function Profile() {
-  return <div>Hey
-  </div>;
+function Profile(props) {
+  const user = props.userDet;
+  return (
+    <div className="userscreen">
+      <h1>Hello {user.name}</h1>
+    </div>
+  );
 }
 
 export default Profile;
