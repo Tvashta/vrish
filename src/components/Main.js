@@ -5,17 +5,21 @@ import LandingPage from "./LandingPage";
 import Shop from "./Shop";
 import Pay from "./Pay";
 import UserEntry from "./UserEntry";
+import Admin from "./Admin";
+import Cards from "./Cards";
+import Card from "./Card";
 import { Navbar, Nav } from "react-bootstrap";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import Profile from "./Profile";
-
+var admin = { id: "ad", pwd: "admin" };
 function Main() {
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState([]);
-  const [isUserAuthenticated, setUserAuthentication] = useState(false);
-  const [user, setUserDetails] = useState({});
+  const [isUserAuthenticated, setUserAuthentication] = useState(true);
+  const [user, setUserDetails] = useState({ username: "ad" });
+  const [card, openCard] = useState(null);
   const items = [
     {
       id: 1,
@@ -102,7 +106,7 @@ function Main() {
   return (
     <div>
       <BrowserRouter>
-        {isUserAuthenticated && (
+        {isUserAuthenticated && user.username != "ad" && (
           <Navbar className="navbar-bg" variant="dark">
             <Navbar.Brand href="#home">FPS</Navbar.Brand>
             <Navbar.Collapse id="basic-navbar-nav">
@@ -129,12 +133,34 @@ function Main() {
             </Navbar.Collapse>
           </Navbar>
         )}
+        {isUserAuthenticated && user.username == "ad" && (
+          <Navbar className="navbar-bg" variant="dark">
+            <Navbar.Brand href="#home">FPS</Navbar.Brand>
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <LinkContainer to="/home">
+                  <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/cards">
+                  <Nav.Link>Cards</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/fps">
+                  <Nav.Link>FPS Shops</Nav.Link>
+                </LinkContainer>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+        )}
         <Route
           exact
           path="/"
           render={() => {
             return isUserAuthenticated ? (
-              <Redirect to="/home" />
+              user.username == "ad" ? (
+                <Redirect to="/adminHome" />
+              ) : (
+                <Redirect to="/home" />
+              )
             ) : (
               <Redirect to="/register" />
             );
@@ -152,13 +178,22 @@ function Main() {
         />
         <Route
           path="/home"
-          render={() => <LandingPage user={user} items={items} />}
+          render={() =>
+            user.username == "ad" ? (
+              <Redirect to="/adminHome" />
+            ) : (
+              <LandingPage user={user} items={items} />
+            )
+          }
         />
+        <Route path="/adminHome" render={() => <Admin />} />
         <Route
           path="/shop"
           render={() => <Shop items={items} addItem={addItem} />}
         />
         <Route path="/pay" render={() => <Pay cart={cart} total={total} />} />
+        <Route path="/cards" render={() => <Cards card={openCard} />} />
+        <Route path="/card" render={() => <Card card={card} />} />
         <Route
           path="/userEntry"
           render={() => (
