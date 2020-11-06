@@ -10,15 +10,14 @@ function Register(props) {
   const [details, setDetails] = useState({
     username: "",
     email: "",
-    password: "",
-    phno: "",
+    ph_no: "",
   });
   const [confpwd, setconfpwd] = useState(false);
   const [error, setErr] = useState({
     username: "",
     email: "",
     password: "",
-    phno: "",
+    ph_no: "",
     gen: "",
   });
   const [ok, goodtogo] = useState(false);
@@ -42,7 +41,7 @@ function Register(props) {
     } else setDetails({ ...details, [name]: value });
     if (value.length === 0) setErr({ ...error, gen: "Enter all fields!" });
     else setErr({ ...error, gen: "" });
-    if (name === "phno")
+    if (name === "ph_no")
       if (value.length !== 10)
         setErr({ ...error, [name]: "Invalid Phone Number" });
       else setErr({ ...error, [name]: "" });
@@ -56,9 +55,8 @@ function Register(props) {
 
     if (
       (details.email.length > 0 &&
-        details.password.length > 0 &&
         details.username.length > 0 &&
-        details.phno.length === 10) ||
+        details.ph_no.length === 10) ||
       !reg
     )
       goodtogo(true);
@@ -91,18 +89,17 @@ function Register(props) {
               name="password"
               className="reg-control"
               placeholder="Password"
-              onChange={(e) => handleInput(e)}
             />
           </div>
           {reg && (
             <div>
-              <p>{error.phno}</p>
+              <p>{error.ph_no}</p>
               <div className="form-holder">
                 <span className="lnr lnr-phone-handset"></span>
                 <input
                   type="number"
                   className="reg-control"
-                  name="phno"
+                  name="ph_no"
                   placeholder="Phone Number"
                   onChange={(e) => handleInput(e)}
                 />
@@ -148,9 +145,22 @@ function Register(props) {
               </button>
             </Link>
           )}
-          <p className="login-a" onClick={handleClick}>
-            {logReg}
-          </p>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <p className="login-a" onClick={handleClick}>
+                    {logReg}
+                  </p>
+                </td>
+                <td>
+                  <Link to="/adminLogin" className="login-a">
+                    Admin login
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </form>
 
         <img src={img2} alt="" className="image-2" />

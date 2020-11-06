@@ -1,24 +1,41 @@
 import React, { useState } from "react";
+import { Nav } from "react-bootstrap";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import axios from "axios";
+
 import Cart from "./Cart";
 import Register from "./Register";
 import LandingPage from "./LandingPage";
 import Shop from "./Shop";
 import Pay from "./Pay";
+import Profile from "./Profile";
 import UserEntry from "./UserEntry";
+
 import Admin from "./Admin";
 import Cards from "./Cards";
 import Card from "./Card";
-import { Navbar, Nav } from "react-bootstrap";
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import Profile from "./Profile";
-var admin = { id: "ad", pwd: "admin" };
+import AdminLogin from "./AdminLogin";
+import AddCard from "./AddCard";
+import Products from "./Products";
+import AddProduct from "./AddProduct";
 function Main() {
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState([]);
-  const [isUserAuthenticated, setUserAuthentication] = useState(true);
-  const [user, setUserDetails] = useState({ username: "ad" });
+  const [isUserAuthenticated, setUserAuthentication] = useState(false);
+  const [isAdminAuthenticated, setAdminAuthentication] = useState(true);
+  const [user, setUserDetails] = useState({
+    uname: "",
+    username: "",
+    ph_no: "",
+    aadhar: "",
+    email: "",
+    addr1: "",
+    city: "",
+    state: "",
+    sex: "",
+  });
   const [card, openCard] = useState(null);
   const items = [
     {
@@ -80,6 +97,26 @@ function Main() {
 
   function setDetails(e) {
     setUserDetails(e);
+    setUserDetails({
+      uname: user.uname,
+      username: user.username,
+      ph_no: user.ph_no.toString(),
+      aadhar: user.aadhar,
+      email: user.email,
+      addr1: user.addr1,
+      city: user.city,
+      state: user.state,
+      sex: user.sex,
+    });
+    isUserAuthenticated &&
+      axios
+        .post("http://localhost:4000/users", user)
+        .then(function (res) {
+          console.log(res);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     console.log(e);
   }
 
@@ -106,61 +143,120 @@ function Main() {
   return (
     <div>
       <BrowserRouter>
-        {isUserAuthenticated && user.username != "ad" && (
-          <Navbar className="navbar-bg" variant="dark">
-            <Navbar.Brand href="#home">FPS</Navbar.Brand>
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <LinkContainer to="/home">
-                  <Nav.Link>Home</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/shop">
-                  <Nav.Link>Shop</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/profile">
-                  <Nav.Link>Profile</Nav.Link>
-                </LinkContainer>
-              </Nav>
+        {isUserAuthenticated ? (
+          <nav className="navbar navbar-light navbar-expand-md">
+            <div className="container-fluid">
+              <p className="navbar-brand"></p>
+              <button
+                data-toggle="collapse"
+                className="navbar-toggler"
+                data-target="#navcol-1"
+              >
+                <span className="sr-only">Toggle navigation</span>
+                <span className="navbar-toggler-icon"></span>
+              </button>
+              <div className="collapse navbar-collapse" id="navcol-1">
+                <ul className="nav navbar-nav mx-auto">
+                  <LinkContainer to="/shop">
+                    <Nav.Link>Shop</Nav.Link>
+                  </LinkContainer>
+                  <li className="nav-item">
+                    <LinkContainer to="/profile">
+                      <Nav.Link>Profile</Nav.Link>
+                    </LinkContainer>
+                  </li>
+                  <li className="nav-item">
+                    <LinkContainer to="/">
+                      <Nav.Link>Statistics</Nav.Link>
+                    </LinkContainer>
+                  </li>
+                </ul>
+                <ul className="nav navbar-nav">
+                  <LinkContainer to="/cart">
+                    <Nav.Link>
+                      <ShoppingCartIcon />
+                      Rs {total}
+                    </Nav.Link>
+                  </LinkContainer>
+                  <li className="nav-item">
+                    <LinkContainer to="/register">
+                      <button
+                        onClick={() => {
+                          setUserAuthentication(false);
+                          setAdminAuthentication(false);
+                        }}
+                        className="btn btn-outline-dark border-dark logout"
+                        type="button"
+                      >
+                        Logout
+                      </button>
+                    </LinkContainer>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        ) : (
+          isAdminAuthenticated && (
+            <nav className="navbar navbar-light navbar-expand-md">
+              <div className="container-fluid">
+                <p className="navbar-brand"></p>
+                <button
+                  data-toggle="collapse"
+                  className="navbar-toggler"
+                  data-target="#navcol-1"
+                >
+                  <span className="sr-only">Toggle navigation</span>
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navcol-1">
+                  <ul className="nav navbar-nav mx-auto">
+                    <li className="nav-item">
+                      <LinkContainer to="/cards">
+                        <Nav.Link>Cards</Nav.Link>
+                      </LinkContainer>
+                    </li>
+                    <li className="nav-item">
+                      <LinkContainer to="/adminHome">
+                        <Nav.Link>Home</Nav.Link>
+                      </LinkContainer>
+                    </li>
+                    <li className="nav-item">
+                      <LinkContainer to="/products">
+                        <Nav.Link>Products</Nav.Link>
+                      </LinkContainer>
+                    </li>
+                  </ul>
+                  <ul className="nav navbar-nav">
+                    <li className="nav-item">
+                      <LinkContainer to="/register">
+                        <button
+                          onClick={() => {
+                            setUserAuthentication(false);
+                            setAdminAuthentication(false);
+                          }}
+                          className="btn btn-outline-dark border-dark logout"
+                          type="button"
+                        >
+                          Logout
+                        </button>
+                      </LinkContainer>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          )
+        )}
 
-              <Nav className="ml-auto">
-                <LinkContainer to="/cart">
-                  <Nav.Link>
-                    <ShoppingCartIcon />
-                    Rs {total}
-                  </Nav.Link>
-                </LinkContainer>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        )}
-        {isUserAuthenticated && user.username == "ad" && (
-          <Navbar className="navbar-bg" variant="dark">
-            <Navbar.Brand href="#home">FPS</Navbar.Brand>
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <LinkContainer to="/home">
-                  <Nav.Link>Home</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/cards">
-                  <Nav.Link>Cards</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/fps">
-                  <Nav.Link>FPS Shops</Nav.Link>
-                </LinkContainer>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        )}
         <Route
           exact
           path="/"
           render={() => {
             return isUserAuthenticated ? (
-              user.username == "ad" ? (
-                <Redirect to="/adminHome" />
-              ) : (
-                <Redirect to="/home" />
-              )
+              <Redirect to="/home" />
+            ) : isAdminAuthenticated ? (
+              <Redirect to="/adminHome" />
             ) : (
               <Redirect to="/register" />
             );
@@ -178,15 +274,13 @@ function Main() {
         />
         <Route
           path="/home"
-          render={() =>
-            user.username == "ad" ? (
-              <Redirect to="/adminHome" />
-            ) : (
-              <LandingPage user={user} items={items} />
-            )
-          }
+          render={() => <LandingPage user={user} items={items} />}
         />
         <Route path="/adminHome" render={() => <Admin />} />
+        <Route
+          path="/adminLogin"
+          render={() => <AdminLogin adminAuth={setAdminAuthentication} />}
+        />
         <Route
           path="/shop"
           render={() => <Shop items={items} addItem={addItem} />}
@@ -205,6 +299,9 @@ function Main() {
           )}
         />
         <Route path="/profile" render={() => <Profile userDet={user} />} />
+        <Route path="/addCard" render={() => <AddCard />} />
+        <Route path="/products" render={() => <Products />} />
+        <Route path="/addProduct" render={() => <AddProduct />} />
       </BrowserRouter>
     </div>
   );

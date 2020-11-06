@@ -5,19 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  background-image: url("./images/Bg.jpg");
-  background-color: black;
-  background-size: cover;
-  height: 100%;
-  width: 100%;
+  background-color: #d9d9d9;
+  background-image: linear-gradient(to right, #f2f6f7, #f6f2f2);
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
+a,
+a:hover {
+  text-decoration: none;
+  color: #000;
+}
 .items {
   display: flex;
   flex-wrap: wrap;
@@ -178,7 +178,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e3ce8b;
+  background-color: #f2f6f7;
   // background: #accffe;
 }
 .inner {
@@ -187,20 +187,22 @@ h2 {
 }
 .image-1 {
   position: absolute;
+  top: -100px;
   left: -300px;
   z-index: 99;
 }
 .image-2 {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 10px;
   z-index: 99;
-  right: -300px;
+  right: 170px;
 }
 .reg-form {
   width: 100%;
   position: relative;
   z-index: 9;
   padding: 77px 61px 66px;
+  padding-bottom: 10px;
   background: #fff;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
@@ -281,7 +283,8 @@ h2 {
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: #99ccff;
+  margin-bottom: 30px;
+  background: #3f72af;
   color: #fff;
   text-transform: uppercase;
   font-family: "Muli-SemiBold";
@@ -290,6 +293,7 @@ h2 {
   transition: all 0.5s;
   position: relative;
   overflow: hidden;
+
   span {
     position: relative;
     z-index: 2;
@@ -353,20 +357,63 @@ h2 {
   }
 }
 .login-a {
+  padding: 0;
+  margin: 7px;
+  color: #000;
   text-decoration: none;
 }
 .login-a:hover {
   cursor: pointer;
   text-decoration: none;
-  color: #99ccff;
+  color: #3f72af;
 }
 
 .user-ip {
-  padding: 3%;
+  padding: 2%;
+  margin: 2% 0;
   width: 100%;
   border: 1px solid steelblue;
   border-radius: 10px;
 }
+
+.user-ip1 {
+  padding: 2%;
+  margin: 2% 0;
+  margin-right: 2%;
+  width: 20%;
+  border: 1px solid steelblue;
+  border-radius: 10px;
+  display: inline;
+}
+
+p.user-ip1 {
+  float: right;
+  margin-right: 0;
+}
+
+.user-ip2 {
+  padding: 2%;
+  margin: 2% 0;
+  margin-right: 2%;
+  width: 40%;
+  border: 1px solid steelblue;
+  border-radius: 10px;
+  display: inline;
+}
+
+select.user-ip2 {
+  padding: 2%;
+  margin: 2% 0;
+  width: 45%;
+  border: 1px solid steelblue;
+  border-radius: 10px;
+  display: inline;
+}
+
+.float-r {
+  float: right;
+}
+
 table {
   width: 100%;
 }
@@ -432,4 +479,157 @@ td {
   margin: 0 auto;
   align-items: center;
   vertical-align: middle;
+}
+
+.icon.ion-chevron-down {
+  color: #000;
+}
+
+ul {
+  font-family: Montserrat, sans-serif;
+}
+
+#top-sec {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  background: url("./images/food.jpg") top / cover no-repeat;
+  height: 100vh;
+}
+.admin-img {
+  position: relative;
+  width: 100%;
+}
+.admin-h3 {
+  position: absolute;
+  text-transform: uppercase;
+  font-size: 25px;
+  font-family: "Muli-SemiBold";
+  color: #fff;
+  z-index: 1;
+  letter-spacing: 3px;
+  text-align: left;
+  margin-bottom: 33px;
+  top: 200px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5%;
+}
+.card {
+  position: relative;
+  width: 30%;
+  overflow: hidden;
+  margin: 1%;
+}
+.card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s ease;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  transition: 0.5s ease;
+}
+
+.card:hover .overlay {
+  bottom: 0;
+  height: 100%;
+}
+
+.card:hover .card-img {
+  transform: scale(1.4);
+}
+
+.card-details {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: #fff;
+}
+.card-p {
+  color: #000;
+  display: block;
+  text-align: center;
+}
+
+.MuiButtonBase-root.fabBtn {
+  position: fixed;
+  right: 0;
+  bottom: 10%;
+  background-color: #ea86b6;
+  margin-right: 5%;
+}
+.MuiButtonBase-root.fabBtn:hover {
+  background-color: #e05297;
+}
+
+.addCard {
+  width: 40%;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+.input-card {
+  width: 100%;
+  padding: 5px;
+  margin: 1% 0;
+  border: none;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+  background-color: #fafafa;
+}
+.add-p {
+  font-size: larger;
+}
+.row,
+.col {
+  padding: 0;
+}
+
+.prod {
+  padding: 5%;
+  background-color: #ccf6c8;
+  margin: 5% -5%;
+}
+
+.btn {
+  margin: 5% 0;
+}
+
+.back.btn {
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  border: #006a71 1px solid;
+}
+.back.btn:hover {
+  background-color: #006a71;
+}
+.addbtn.btn {
+  background-color: #226597;
+  border: #226597 1px solid;
+}
+.addbtn.btn:hover {
+  background-color: #113f67;
+}
+.MuiButtonBase-root.fabBtn1 {
+  background-color: #006a71;
+  color: white;
+}
+.MuiButtonBase-root.fabBtn1:hover {
+  background-color: #ccf6c8;
+  color: black;
 }
