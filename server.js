@@ -37,12 +37,37 @@ app
     });
   });
 
-app.route("/users").post((req, res) => {
-  let user = req.body;
-  let sql = "INSERT INTO users SET ?";
-  let query = db.query(sql, user, (err, results) => {
+app
+  .route("/users")
+  .post((req, res) => {
+    let user = req.body;
+    let sql = "INSERT INTO users SET ?";
+    let query = db.query(sql, user, (err, results) => {
+      if (err) console.log(err);
+      else res.json("User added");
+    });
+  })
+  .get((req, res) => {
+    let sql = "SELECT * from Users";
+    let query = db.query(sql, (err, results) => {
+      if (err) console.log(err);
+      else res.json(results);
+    });
+  });
+
+app.get("/users/:aadhar", (req, res) => {
+  let sql = "SELECT user_id from users where aadhar=" + req.params.aadhar;
+  let query = db.query(sql, (err, results) => {
     if (err) console.log(err);
-    else res.json("User added");
+    else res.json(results);
+  });
+});
+
+app.get("/username/:uname", (req, res) => {
+  let sql = "SELECT * from users where username='" + req.params.uname + "'";
+  let query = db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(results);
   });
 });
 
@@ -81,5 +106,25 @@ app
       else res.json("Product added to Card");
     });
   });
+
+app.get("/prodCard/:income", (req, res) => {
+  let sql =
+    "SELECT * from prod_for_cards where income_range= '" +
+    req.params.income +
+    "'";
+  let query = db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(results);
+  });
+});
+
+app.route("/family").post((req, res) => {
+  let family = req.body;
+  let sql = "INSERT INTO family SET ?";
+  db.query(sql, family, (err, results) => {
+    if (err) console.log(err);
+    else res.json("Family member added!");
+  });
+});
 
 app.listen(PORT, () => console.log("Server is running on Port: " + PORT));

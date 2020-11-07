@@ -1,17 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import img1 from "../images/girl.png";
 import img2 from "../images/boy.png";
-
+import { Add } from "@material-ui/icons";
+import { Fab } from "@material-ui/core";
+import { cities, states } from "./utilities/cities";
+import axios from "axios";
 function Register(props) {
+  const [response, setResp] = useState([]);
+  useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    const loadData = () => {
+      try {
+        axios.get("http://localhost:4000/cardCat").then(function (res) {
+          console.log(res.data);
+          setResp(res.data);
+        });
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("cancelled");
+        } else {
+          throw error;
+        }
+      }
+    };
+
+    loadData();
+    return () => {
+      source.cancel();
+    };
+  }, []);
+  const [user, setUserDetails] = useState({
+    uname: "",
+    username: "",
+    ph_no: "",
+    aadhar: "",
+    email: "",
+    addr1: "",
+    city: "",
+    state: "",
+    sex: "F",
+    income_range: "",
+  });
+  const [members, setMembers] = useState(0);
   const [reg, isregActive] = useState(true);
   const [regText, setRegText] = useState("Register");
   const [logReg, setlogReg] = useState("Already have an account?");
-  const [details, setDetails] = useState({
-    username: "",
-    email: "",
-    ph_no: "",
-  });
   const [confpwd, setconfpwd] = useState(false);
   const [error, setErr] = useState({
     username: "",
@@ -21,6 +57,41 @@ function Register(props) {
     gen: "",
   });
   const [ok, goodtogo] = useState(false);
+  const [state, setState] = useState(0);
+  const [city, setCity] = useState("Select City");
+  const [family, setfamily] = useState([]);
+  const [member, setmember] = useState({
+    name: "",
+    sex: "M",
+    aadhar: "",
+    dob: "",
+  });
+
+  function handleState(e) {
+    setState(states.findIndex((x) => x === e));
+    setCity("Select City");
+    let city = cities[state].split("|");
+    setUserDetails({ ...user, state: e, city: city[0] });
+  }
+
+  function addMember() {
+    console.log(member);
+    if (member.name.length && member.aadhar.length === 12) {
+      setfamily([...family, member]);
+      setmember({
+        name: "",
+        sex: "M",
+        aadhar: "",
+        dob: "",
+      });
+      setMembers(members + 1);
+    }
+  }
+
+  function handleMember(e) {
+    let { name, value } = e.target;
+    setmember({ ...member, [name]: value });
+  }
   function handleClick() {
     if (reg) {
       setRegText("Login");
@@ -36,9 +107,9 @@ function Register(props) {
   function handleInput(e) {
     let { name, value } = e.target;
     if (name === "confpwd") {
-      if (value !== details.password) setconfpwd(true);
+      if (value !== user.password) setconfpwd(true);
       else setconfpwd(false);
-    } else setDetails({ ...details, [name]: value });
+    } else setUserDetails({ ...user, [name]: value });
     if (value.length === 0) setErr({ ...error, gen: "Enter all fields!" });
     else setErr({ ...error, gen: "" });
     if (name === "ph_no")
@@ -54,9 +125,15 @@ function Register(props) {
       else setErr({ ...error, [name]: "" });
 
     if (
-      (details.email.length > 0 &&
-        details.username.length > 0 &&
-        details.ph_no.length === 10) ||
+      (user.email.length > 0 &&
+        user.username.length > 0 &&
+        user.ph_no.length === 10 &&
+        user.uname.length > 0 &&
+        user.addr1.length > 2) ||
+      //&&user.aadhar.length === 11 &&
+      // family.length > 0 &&
+      // user.state.length &&
+      // user.city.length
       !reg
     )
       goodtogo(true);
@@ -129,16 +206,141 @@ function Register(props) {
                   onChange={(e) => handleInput(e)}
                 />
               </div>
+              <h4 className="prod">User Details</h4>
+              <input
+                type="text"
+                className="user-ip"
+                name="uname"
+                placeholder="Name"
+                onChange={(e) => handleInput(e)}
+              />
+
+              <input
+                type="text"
+                className="user-ip"
+                name="addr1"
+                placeholder="Address Lane 1"
+                onChange={(e) => handleInput(e)}
+              />
+              <select
+                type="text"
+                className="user-ip"
+                name="income_range"
+                onChange={(e) => handleInput(e)}
+              >
+                <option>Select Income Range</option>
+                {response.map((x, i) => (
+                  <option key={i}>{x.income_range}</option>
+                ))}
+              </select>
+
+              <select
+                id="state"
+                className="user-ip2"
+                required
+                onChange={(e) => handleState(e.target.value)}
+              >
+                {states.map((x, i) => (
+                  <option key={i}>{x}</option>
+                ))}
+              </select>
+              <select
+                id="city"
+                className="user-ip2 float-r"
+                value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setUserDetails({ ...user, city: e.target.value });
+                }}
+              >
+                {cities[state].split("|").map((x, i) => (
+                  <option key={i}>{x}</option>
+                ))}
+              </select>
+
+              <input
+                type="number"
+                className="user-ip"
+                name="aadhar"
+                placeholder="Aadhar Number"
+                onChange={(e) => handleInput(e)}
+              />
+
+              <select
+                name="sex"
+                className="user-ip1"
+                onChange={(e) => handleInput(e)}
+              >
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+                <option value="T">Transgender</option>
+              </select>
+              <p className="user-ip1">{members}</p>
+
+              <h4 className="prod">Family Members</h4>
+              {family.map((x, i) => (
+                <div className="family" key={i}>
+                  <h6>{x.name}</h6>
+                  <p className="no-margin">{x.aadhar}</p>
+                  <p className="no-margin">{x.dob}</p>
+                  <p className="no-margin">{x.sex}</p>
+                </div>
+              ))}
+              <input
+                value={member.name}
+                type="text"
+                className="user-ip"
+                name="name"
+                placeholder="Name"
+                onChange={(e) => handleMember(e)}
+              />
+              <input
+                value={member.aadhar}
+                type="number"
+                className="user-ip2"
+                name="aadhar"
+                placeholder="Aadhar Number"
+                onChange={(e) => handleMember(e)}
+              />
+              <input
+                className="user-ip2 float-r"
+                name="dob"
+                type="date"
+                value={member.dob}
+                onChange={(e) => handleMember(e)}
+              />
+
+              <select
+                value={member.sex}
+                name="sex"
+                className="user-ip2"
+                onChange={(e) => handleMember(e)}
+              >
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="T">Transgender</option>
+              </select>
+
+              <Fab className="fabBtn1" onClick={addMember}>
+                <Add />
+              </Fab>
               <p>{error.gen}</p>
             </div>
           )}
           {ok && (
-            <Link to={reg ? "/userEntry" : "/home"}>
+            <Link to="/home">
               <button
                 className="reg-button"
                 onClick={() => {
-                  props.setDetails(details);
-                  !reg && props.userAuth(true);
+                  let p = "http://localhost:4000/username/" + user.username;
+                  reg
+                    ? props.setDetails(user, family)
+                    : axios
+                        .get(p)
+                        .then((res) => props.setDetails(res.data[0]), family)
+                        .catch((err) => console.log(err));
+
+                  props.userAuth(true);
                 }}
               >
                 <span>{regText}</span>

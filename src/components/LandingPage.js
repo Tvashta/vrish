@@ -10,7 +10,7 @@ function LandingPage(props) {
       >
         <div>
           <h1 className="d-inline float-right" id="home-head">
-            <strong>Welcome!</strong>
+            <strong>Welcome {props.user.username}</strong>
           </h1>
         </div>
         <div>

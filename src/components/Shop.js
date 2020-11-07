@@ -1,8 +1,9 @@
-import React from 'react'
-import Product from './Product'
-function Shop (props) {
+import React from "react";
+import Product from "./Product";
+function Shop(props) {
+  console.log(props);
   return (
-    <div className='items'>
+    <div className="items">
       {props.items.map((item, key) => (
         <Product
           key={key}
@@ -10,14 +11,14 @@ function Shop (props) {
           name={item.name}
           url={item.url}
           added={item.added}
-          quantity={item.quantity}
+          quantity={item.qty}
           price={item.price}
           addItem={props.addItem}
           allowedQuantity={item.allowedQuantity}
         />
       ))}
     </div>
-  )
+  );
 }
 
-export default Shop
+export default Shop;

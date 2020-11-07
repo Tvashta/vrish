@@ -11,7 +11,6 @@ import LandingPage from "./LandingPage";
 import Shop from "./Shop";
 import Pay from "./Pay";
 import Profile from "./Profile";
-import UserEntry from "./UserEntry";
 
 import Admin from "./Admin";
 import Cards from "./Cards";
@@ -24,7 +23,7 @@ function Main() {
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState([]);
   const [isUserAuthenticated, setUserAuthentication] = useState(false);
-  const [isAdminAuthenticated, setAdminAuthentication] = useState(true);
+  const [isAdminAuthenticated, setAdminAuthentication] = useState(false);
   const [user, setUserDetails] = useState({
     uname: "",
     username: "",
@@ -35,89 +34,45 @@ function Main() {
     city: "",
     state: "",
     sex: "",
+    income_range: "",
   });
   const [card, openCard] = useState(null);
-  const items = [
-    {
-      id: 1,
-      name: "Rice",
-      url:
-        "https://m.economictimes.com/thumb/msid-74822211,width-1200,height-900,resizemode-4,imgsize-258618/rice-agencies.jpg",
-      added: false,
-      quantity: 0,
-      allowedQuantity: 5,
-      qtyConsumed: 2,
-      price: 60,
-    },
-    {
-      id: 2,
-      name: "Wheat",
-      url:
-        "https://images.newindianexpress.com/uploads/user/imagelibrary/2019/9/29/w900X450/Highs.jpg",
-      added: false,
-      quantity: 0,
-      allowedQuantity: 2,
-      qtyConsumed: 1,
-      price: 50,
-    },
-    {
-      id: 3,
-      name: "Sugar",
-      url:
-        "https://sensorex.com/wp-content/uploads/2017/08/sugar-e1502291655515.jpg",
-      added: false,
-      quantity: 0,
-      allowedQuantity: 2,
-      qtyConsumed: 1,
-      price: 40,
-    },
-    {
-      id: 4,
-      name: "Toor Daal",
-      url:
-        "https://cdn.shopify.com/s/files/1/1751/6601/products/Toor_Daal_1400x.jpg?v=1527359086",
-      added: false,
-      quantity: 0,
-      allowedQuantity: 3,
-      qtyConsumed: 0,
-      price: 40,
-    },
-    {
-      id: 5,
-      name: "Cooking Oil",
-      url:
-        "https://m.economictimes.com/thumb/msid-72250379,width-1200,height-900,resizemode-4,imgsize-573232/cooking-oil.jpg",
-      added: false,
-      quantity: 0,
-      allowedQuantity: 2,
-      qtyConsumed: 0,
-      price: 50,
-    },
-  ];
+  const [items, setItems] = useState([]);
 
-  function setDetails(e) {
+  function setDetails(e, f) {
     setUserDetails(e);
-    setUserDetails({
-      uname: user.uname,
-      username: user.username,
-      ph_no: user.ph_no.toString(),
-      aadhar: user.aadhar,
-      email: user.email,
-      addr1: user.addr1,
-      city: user.city,
-      state: user.state,
-      sex: user.sex,
-    });
-    isUserAuthenticated &&
-      axios
-        .post("http://localhost:4000/users", user)
-        .then(function (res) {
-          console.log(res);
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
-    console.log(e);
+    let path = "http://localhost:4000/users/" + e.aadhar;
+    axios
+      .post("http://localhost:4000/users", e)
+      .then(function (res) {
+        axios
+          .get(path)
+          .then((res) => {
+            f.map((x) => {
+              let member = {
+                aadhar: x.aadhar,
+                name: x.name,
+                dob: x.dob,
+                sex: x.sex,
+                user_id: res.data[0].user_id,
+              };
+
+              axios
+                .post("http://localhost:4000/family", member)
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+            });
+            let p = "http://localhost:4000/prodCard" + e.income_range;
+            axios
+              .get(p)
+              .then((res) => setItems(res.data))
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   function addItem(item) {
@@ -274,7 +229,7 @@ function Main() {
         />
         <Route
           path="/home"
-          render={() => <LandingPage user={user} items={items} />}
+          render={() => <LandingPage user={user} setItems={setItems} />}
         />
         <Route path="/adminHome" render={() => <Admin />} />
         <Route
@@ -285,19 +240,12 @@ function Main() {
           path="/shop"
           render={() => <Shop items={items} addItem={addItem} />}
         />
-        <Route path="/pay" render={() => <Pay cart={cart} total={total} />} />
+        <Route
+          path="/pay"
+          render={() => <Pay cart={cart} total={total} user={user} />}
+        />
         <Route path="/cards" render={() => <Cards card={openCard} />} />
         <Route path="/card" render={() => <Card card={card} />} />
-        <Route
-          path="/userEntry"
-          render={() => (
-            <UserEntry
-              user={user}
-              setDetails={setDetails}
-              userAuth={setUserAuthentication}
-            />
-          )}
-        />
         <Route path="/profile" render={() => <Profile userDet={user} />} />
         <Route path="/addCard" render={() => <AddCard />} />
         <Route path="/products" render={() => <Products />} />
