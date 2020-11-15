@@ -3,13 +3,13 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 export default function AddProduct(props) {
-  const [product, setprod] = useState({ name: "", url: "" });
+  const [product, setprod] = useState({ name: "", url: "", qtyConsumed: 0 });
   function addProd() {
     axios
       .post("http://localhost:4000/products", product)
       .then(function (res) {
         console.log(res);
-        setprod({ name: "", url: "" });
+        setprod({ name: "", url: "", qtyConsumed: 0 });
       })
       .catch(function (err) {
         console.log(err);

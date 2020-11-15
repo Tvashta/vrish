@@ -15,7 +15,6 @@ function Register(props) {
     const loadData = () => {
       try {
         axios.get("http://localhost:4000/cardCat").then(function (res) {
-          console.log(res.data);
           setResp(res.data);
         });
       } catch (error) {
@@ -334,12 +333,13 @@ function Register(props) {
                 onClick={() => {
                   let p = "http://localhost:4000/username/" + user.username;
                   reg
-                    ? props.setDetails(user, family)
+                    ? props.setDetails(user, family, reg)
                     : axios
                         .get(p)
-                        .then((res) => props.setDetails(res.data[0]), family)
+                        .then((res) =>
+                          props.setDetails(res.data[0], family, reg)
+                        )
                         .catch((err) => console.log(err));
-
                   props.userAuth(true);
                 }}
               >

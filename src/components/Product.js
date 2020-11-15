@@ -9,9 +9,9 @@ function Product(props) {
     id: props.id,
     name: props.name,
     url: props.url,
-    quantity: props.quantity,
     price: props.price,
-    allowedQuantity: props.allowedQuantity,
+    quantity: 0,
+    allowedQuantity: props.quantity,
   });
   function quant(a) {
     if (a === 1)
@@ -40,6 +40,7 @@ function Product(props) {
           <RemoveIcon />
         </Fab>
       </div>
+      <h4 className="alignCenter">Allowed Quantity: {item.allowedQuantity}</h4>
       <Button
         variant="success"
         block

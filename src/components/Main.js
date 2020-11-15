@@ -11,6 +11,8 @@ import LandingPage from "./LandingPage";
 import Shop from "./Shop";
 import Pay from "./Pay";
 import Profile from "./Profile";
+import Transaction from "./Transaction";
+import Contact from "./Contact";
 
 import Admin from "./Admin";
 import Cards from "./Cards";
@@ -19,11 +21,14 @@ import AdminLogin from "./AdminLogin";
 import AddCard from "./AddCard";
 import Products from "./Products";
 import AddProduct from "./AddProduct";
+import UserTrans from "./UserTrans";
+
 function Main() {
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState([]);
+  const [cardName, setCardName] = useState("");
   const [isUserAuthenticated, setUserAuthentication] = useState(false);
-  const [isAdminAuthenticated, setAdminAuthentication] = useState(false);
+  const [isAdminAuthenticated, setAdminAuthentication] = useState(true);
   const [user, setUserDetails] = useState({
     uname: "",
     username: "",
@@ -39,40 +44,64 @@ function Main() {
   const [card, openCard] = useState(null);
   const [items, setItems] = useState([]);
 
-  function setDetails(e, f) {
+  function setDetails(e, f, l) {
     setUserDetails(e);
-    let path = "http://localhost:4000/users/" + e.aadhar;
-    axios
-      .post("http://localhost:4000/users", e)
-      .then(function (res) {
-        axios
-          .get(path)
-          .then((res) => {
-            f.map((x) => {
-              let member = {
-                aadhar: x.aadhar,
-                name: x.name,
-                dob: x.dob,
-                sex: x.sex,
-                user_id: res.data[0].user_id,
-              };
-
+    if (l) {
+      let path = "http://localhost:4000/users/" + e.aadhar;
+      axios
+        .post("http://localhost:4000/users", e)
+        .then(function (res) {
+          axios
+            .get(path)
+            .then((res) => {
+              setUserDetails({ ...e, user_id: res.data[0].user_id });
+              console.log(user);
+              f.map((x) => {
+                let member = {
+                  aadhar: x.aadhar,
+                  name: x.name,
+                  dob: x.dob,
+                  sex: x.sex,
+                  user_id: res.data[0].user_id,
+                };
+                axios
+                  .post("http://localhost:4000/family", member)
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err));
+                return null;
+              });
+              let p = "http://localhost:4000/prodCard/" + e.income_range;
               axios
-                .post("http://localhost:4000/family", member)
-                .then((res) => console.log(res))
+                .get(p)
+                .then((res1) => {
+                  res1.data.map((x) => {
+                    let prodUser = {
+                      user_id: res.data[0].user_id,
+                      prod_id: x.prod_id,
+                      qty: x.qty,
+                    };
+                    axios
+                      .post("http://localhost:4000/prodUser", prodUser)
+                      .then((res) => console.log(res))
+                      .catch((err) => console.log(err));
+                    return null;
+                  });
+                  setItems(res1.data);
+                })
                 .catch((err) => console.log(err));
-            });
-            let p = "http://localhost:4000/prodCard" + e.income_range;
-            axios
-              .get(p)
-              .then((res) => setItems(res.data))
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    } else {
+      let path = "http://localhost:4000/prodUser/" + e.user_id;
+      axios
+        .get(path)
+        .then((res) => setItems(res.data))
+        .catch((err) => console.log(err));
+    }
   }
 
   function addItem(item) {
@@ -86,6 +115,7 @@ function Main() {
         f = 1;
       }
       t += c.quantity * c.price;
+      return null;
     });
     if (f === 0) {
       cart.push(item);
@@ -93,6 +123,48 @@ function Main() {
     }
     setTotal(t);
     setCart(cart);
+  }
+
+  function cardDetails(cdetails) {
+    setCardName(cdetails.cname);
+    if (cdetails.cname === "") {
+      setCardName(user.uname);
+    }
+
+    var d = new Date();
+    var datetime =
+      d.toISOString().split("T")[0] + " " + d.toTimeString().split(" ")[0];
+    console.log(datetime);
+    let trans = {
+      user_id: user.user_id,
+      amt: total,
+      date: datetime,
+    };
+    axios
+      .post("http://localhost:4000/trans", trans)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    cart.map((x) => {
+      let path = "http://localhost:4000/prodUser/" + user.user_id;
+      let y = { qty: x.allowedQuantity - x.quantity, name: x.name };
+      console.log(y);
+      axios
+        .post(path, y)
+        .then((res) => {
+          let path = "http://localhost:4000/prodUser/" + user.user_id;
+          axios
+            .get(path)
+            .then((res) => {
+              setItems(res.data);
+              setCart([]);
+              setTotal(0);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+      return null;
+    });
   }
 
   return (
@@ -240,16 +312,35 @@ function Main() {
           path="/shop"
           render={() => <Shop items={items} addItem={addItem} />}
         />
-        <Route
-          path="/pay"
-          render={() => <Pay cart={cart} total={total} user={user} />}
-        />
+
         <Route path="/cards" render={() => <Cards card={openCard} />} />
         <Route path="/card" render={() => <Card card={card} />} />
         <Route path="/profile" render={() => <Profile userDet={user} />} />
         <Route path="/addCard" render={() => <AddCard />} />
         <Route path="/products" render={() => <Products />} />
         <Route path="/addProduct" render={() => <AddProduct />} />
+        <Route path="/Connect" render={() => <Contact />} />
+        <Route
+          path="/User_transactions"
+          render={() => <UserTrans userid={user.user_id} />}
+        />
+
+        <Route
+          path="/pay"
+          render={() => (
+            <Pay
+              cart={cart}
+              total={total}
+              user={user}
+              cardDetails={cardDetails}
+            />
+          )}
+        />
+
+        <Route
+          path="/Transaction"
+          render={() => <Transaction cardName={cardName} />}
+        />
       </BrowserRouter>
     </div>
   );

@@ -58,6 +58,7 @@ export default function AddCard(props) {
             .post("http://localhost:4000/prodCard", product)
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
+          return null;
         });
         setCard({ income_range: "", card_name: "", card_img: "" });
         window.location.reload(false);
@@ -69,7 +70,7 @@ export default function AddCard(props) {
 
   function addProd(e) {
     if (e.target.value !== "Select") {
-      let i = products[products.findIndex((x) => x.name == e.target.value)].id;
+      let i = products[products.findIndex((x) => x.name === e.target.value)].id;
       setProduct({ ...product, prod_id: i, prod_name: e.target.value });
       console.log(i);
     }
@@ -78,7 +79,7 @@ export default function AddCard(props) {
   function handleClick2() {
     console.log(product);
     setProd([...prod, product]);
-    setResp(products.filter((x) => x.id != product.prod_id));
+    setResp(products.filter((x) => x.id !== product.prod_id));
     setProduct({ ...product, qty: "", price: "", prod_id: "", prod_name: "" });
   }
 

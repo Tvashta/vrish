@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup, Form, Col } from "react-bootstrap";
 import DatePicker from "react-datepicker";
+import { Link } from "react-router-dom";
 
 function Pay(props) {
   const { total } = props;
@@ -8,8 +9,13 @@ function Pay(props) {
   const [cashOrCard, setCashOrCard] = useState(null);
   const [cardnoFlag, setCardFlag] = useState(false);
   const [cardError, setCardError] = useState("");
+  const [cdetails, Setcdetails] = useState({
+    cname: "",
+    cno: "",
+  });
   function handleCardNo(e) {
     let val = e.target.value;
+    let name = e.target.name;
     if (val.length === 0) {
       setCardFlag(true);
       setCardError("Card Number can't be empty");
@@ -17,7 +23,9 @@ function Pay(props) {
       setCardFlag(true);
       setCardError("Invalid Card Number");
     }
+    Setcdetails({ ...cdetails, [name]: val });
   }
+
   return (
     <div className="pay">
       <div className="cartItem">
@@ -40,6 +48,7 @@ function Pay(props) {
               <Form.Label>Card Number</Form.Label>
               {cardnoFlag && <Form.Text>{cardError}</Form.Text>}
               <Form.Control
+                name="cno"
                 type="number"
                 onChange={(e) => handleCardNo(e)}
                 placeholder="Enter card number"
@@ -47,7 +56,12 @@ function Pay(props) {
             </Form.Group>
             <Form.Group controlId="cardname">
               <Form.Label>Name on the Card</Form.Label>
-              <Form.Control type="text" placeholder="Enter Name on Card" />
+              <Form.Control
+                name="cname"
+                type="text"
+                onChange={(e) => handleCardNo(e)}
+                placeholder="Enter Name on Card"
+              />
             </Form.Group>
             <Form.Row className="align-items-center">
               <Col sm={3} className="my-1">
@@ -65,12 +79,28 @@ function Pay(props) {
                 />
               </Col>
             </Form.Row>
-            <Button variant="success">Pay Now</Button>
+            <Link to="/Transaction">
+              <Button
+                variant="success"
+                onClick={() => {
+                  props.cardDetails(cdetails);
+                }}
+              >
+                Pay Now
+              </Button>
+            </Link>
           </Form>
         </div>
       ) : (
         <div className="cartItem">
-          <Button variant="success">Pay Now</Button>
+          <Link to="/Transaction">
+            <Button
+              variant="success"
+              onClick={() => props.cardDetails(cdetails)}
+            >
+              Pay Now
+            </Button>
+          </Link>
         </div>
       )}
     </div>
