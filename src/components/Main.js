@@ -22,6 +22,8 @@ import AddCard from "./AddCard";
 import Products from "./Products";
 import AddProduct from "./AddProduct";
 import UserTrans from "./UserTrans";
+import Gender from "./Gender";
+import UserStats from "./UserStats";
 
 function Main() {
   const [total, setTotal] = useState(0);
@@ -324,6 +326,8 @@ function Main() {
           path="/User_transactions"
           render={() => <UserTrans userid={user.user_id} />}
         />
+        <Route path="/gender" render={() => <Gender />} />
+        <Route path="/userStats" render={() => <UserStats />} />
 
         <Route
           path="/pay"

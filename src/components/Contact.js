@@ -2,7 +2,7 @@ import React from "react";
 import { Jumbotron } from "react-bootstrap";
 function Contact(props) {
   return (
-    <div>
+    <div className="cartItem">
       <Jumbotron>
         <div class="faq1">
           <h2>Frequently asked questions</h2>
@@ -48,12 +48,11 @@ function Contact(props) {
 
         <div class="faq">
           <p>
-            Please feel free to contact if you need any further information
+            Please feel free to mail your suggestions or queries
             <br></br>
             Contact information<br></br>
-            Name - Aparna<br></br>
-            Email ID - aparna@gmail.com<br></br>
-            Phone Number - 9821678326<br></br>
+            Name - Svaksha Swaminathan<br></br>
+            Email ID - head_of_welfare@ration.gov.in<br></br>
           </p>
         </div>
       </Jumbotron>

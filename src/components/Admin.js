@@ -1,38 +1,36 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import gender from "../images/gender.jpg";
+import user from "../images/users.jpg";
+import revenue from "../images/revenue.png";
+import refill from "../images/refill.jpg";
+import { Link } from "react-router-dom";
 
 export default function Admin() {
-  const [res, setRes] = useState({});
-  useEffect(() => {
-    const CancelToken = axios.CancelToken;
-    const source = CancelToken.source();
-
-    const loadData = () => {
-      try {
-        axios.get("http://localhost:4000/userGender").then(function (res) {
-          let st = {};
-          res.data.map((x) => {
-            st = {
-              ...st,
-              [x.state]: [],
-            };
-            return null;
-          });
-          res.data.map((x) => st[x.state].push({ [x.sex]: x.count }));
-          setRes(st);
-        });
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log("cancelled");
-        } else {
-          throw error;
-        }
-      }
-    };
-    loadData();
-    return () => {
-      source.cancel();
-    };
-  }, []);
-  return <div>hey</div>;
+  return (
+    <div className="adminDash">
+      <Link to="/gender">
+        <button className="imgbtn">
+          <img src={gender} />
+          Gender
+        </button>
+      </Link>
+      <Link to="/userStats">
+        <button className="imgbtn">
+          <img src={user} />
+          User Stats
+        </button>
+      </Link>
+      <Link to="/revenue">
+        <button className="imgbtn">
+          <img src={revenue} />
+          Revenue
+        </button>
+      </Link>
+      <button className="imgbtn">
+        <img src={refill} />
+        Refill Products
+      </button>
+    </div>
+  );
 }

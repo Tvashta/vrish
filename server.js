@@ -205,16 +205,7 @@ app.get("/trans/:id", (req, res) => {
 
 app.get("/userCity", (req, res) => {
   let sql =
-    "select v1.count+v2.count as count, v1.city, v1.state from userCity v1, famCity v2 where v1.state=v2.state and v1.city=v2.city;";
-  db.query(sql, (err, results) => {
-    if (err) console.log(err);
-    else res.json(results);
-  });
-});
-
-app.get("/userState", (req, res) => {
-  let sql =
-    "select v1.count+v2.count as count, v1.state from userCity v1, famCity v2 where v1.state=v2.state;";
+    "select v1.count+ ifnull(v2.count, 0) as count, v1.city, v1.state from userCity v1 left join famCity v2 on v1.city=v2.city;";
   db.query(sql, (err, results) => {
     if (err) console.log(err);
     else res.json(results);
