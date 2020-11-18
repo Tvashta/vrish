@@ -48,6 +48,7 @@ function Register(props) {
   const [regText, setRegText] = useState("Register");
   const [logReg, setlogReg] = useState("Already have an account?");
   const [confpwd, setconfpwd] = useState(false);
+  const [pwd, setpwd] = useState("");
   const [error, setErr] = useState({
     username: "",
     email: "",
@@ -106,7 +107,7 @@ function Register(props) {
   function handleInput(e) {
     let { name, value } = e.target;
     if (name === "confpwd") {
-      if (value !== user.password) setconfpwd(true);
+      if (value !== pwd) setconfpwd(true);
       else setconfpwd(false);
     } else setUserDetails({ ...user, [name]: value });
     if (value.length === 0) setErr({ ...error, gen: "Enter all fields!" });
@@ -115,13 +116,15 @@ function Register(props) {
       if (value.length !== 10)
         setErr({ ...error, [name]: "Invalid Phone Number" });
       else setErr({ ...error, [name]: "" });
-    else if (name === "password")
+    else if (name === "password") {
+      setpwd(value);
       if (value.length < 8)
         setErr({
           ...error,
           [name]: "Password must be atleast 8 characters long",
         });
       else setErr({ ...error, [name]: "" });
+    }
 
     if (
       (user.email.length > 0 &&
@@ -163,6 +166,8 @@ function Register(props) {
             <input
               type="password"
               name="password"
+              value={pwd}
+              onChange={(e) => handleInput(e)}
               className="reg-control"
               placeholder="Password"
             />

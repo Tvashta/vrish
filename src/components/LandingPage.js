@@ -76,28 +76,33 @@ function LandingPage(props) {
       (a, i) => (transC.data = [...transC.data, { x: monthNames[i], y: a }])
     );
     let prod = [];
+    let items1 = [];
     let path = "http://localhost:4000/prodCons/" + props.user.user_id;
     axios.get(path).then((res) => {
       res.data.map((x) => {
-        items.push(x.name);
-        prod.push([
-          {
-            id: "Consumed [%]",
-            label: "Consumed [%]",
-            value: x.pcons,
-          },
-          {
-            id: "Left [%]",
-            label: "Left [%]",
-            value: 100 - x.pcons,
-          },
-        ]);
+        if (!items1.includes(x.name)) {
+          items1.push(x.name);
+          prod.push([
+            {
+              id: "Consumed [%]",
+              label: "Consumed [%]",
+              value: x.pcons,
+            },
+            {
+              id: "Left [%]",
+              label: "Left [%]",
+              value: 100 - x.pcons,
+            },
+          ]);
+        }
+
         return null;
       });
 
       item.map((x) => {
-        if (!items.includes(x)) {
-          items.push(x);
+        console.log(items1, x);
+        if (!items1.includes(x)) {
+          items1.push(x);
           prod.push([
             {
               id: "Consumed [%]",
@@ -108,6 +113,7 @@ function LandingPage(props) {
         }
         return null;
       });
+      setItems(items1);
       setProdCons(prod);
       setFlag(true);
     });

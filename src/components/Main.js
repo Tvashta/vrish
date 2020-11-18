@@ -24,6 +24,7 @@ import AddProduct from "./AddProduct";
 import UserTrans from "./UserTrans";
 import Gender from "./Gender";
 import UserStats from "./UserStats";
+import Revenue from "./Revenue";
 
 function Main() {
   const [total, setTotal] = useState(0);
@@ -327,7 +328,9 @@ function Main() {
           render={() => <UserTrans userid={user.user_id} />}
         />
         <Route path="/gender" render={() => <Gender />} />
+
         <Route path="/userStats" render={() => <UserStats />} />
+        <Route path="/revenue" render={() => <Revenue />} />
 
         <Route
           path="/pay"

@@ -781,6 +781,16 @@ ul {
   margin: 20px 0;
   display: inline-block;
 }
+.pie1 {
+  h1 {
+    font-size: large;
+    text-align: center;
+  }
+  width: 40%;
+  height: 400px;
+  margin: 20px 0;
+  display: inline-block;
+}
 .pieContainer {
   display: flex;
   flex-wrap: wrap;
@@ -925,4 +935,43 @@ ul {
   }
   width: 60%;
   margin: 0 auto;
+}
+.rev {
+  table {
+    width: 500px;
+    border: 1px black solid;
+    tr,
+    td {
+      border: 1px black solid;
+    }
+  }
+}
+
+.revhead {
+  margin: 50px 0;
+}
+.map1 {
+  h1 {
+    padding: 0 20px;
+    text-align: center;
+  }
+  width: 46%;
+  margin: 20px;
+  margin-left: 40px;
+  display: inline-block;
+}
+.cardItem {
+  width: 50%;
+  margin: 0 auto;
+  background-color: white;
+  padding: 5%;
+  img {
+    width: 100%;
+  }
+  h1 {
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+  }
 }

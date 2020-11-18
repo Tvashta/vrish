@@ -8,6 +8,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "root",
   database: "FPS",
+  multipleStatements: true,
 });
 
 db.connect((err) => {
@@ -230,4 +231,47 @@ app.get("/userCard", (req, res) => {
   });
 });
 
+// Amount Stats
+app.get("/timeRev", (req, res) => {
+  let sql =
+    "SELECT SUM(CASE WHEN HOUR(`date`) BETWEEN 6 AND 12 THEN amt ELSE 0 END) AS `Morning`, SUM(CASE WHEN HOUR(`date`) BETWEEN 12 AND 18 THEN amt ELSE 0 END) AS `Afternoon`, SUM(CASE WHEN HOUR(`date`) < 6 OR HOUR(`date`) > 18 THEN amt ELSE 0 END) AS `Evening` FROM  transactions;";
+  db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(results);
+  });
+});
+
+app.get("/timeCount", (req, res) => {
+  let sql =
+    "SELECT SUM(CASE WHEN HOUR(`date`) BETWEEN 6 AND 12 THEN 1 ELSE 0 END) AS `Morning`, SUM(CASE WHEN HOUR(`date`) BETWEEN 12 AND 18 THEN 1 ELSE 0 END) AS `Afternoon`, SUM(CASE WHEN HOUR(`date`) < 6 OR HOUR(`date`) > 18 THEN 1 ELSE 0 END) AS `Evening` FROM  transactions;";
+  db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(results);
+  });
+});
+app.get("/stateRev", (req, res) => {
+  let sql =
+    "Select state, max(amt) as max, min(amt) as min, sum(amt) as sum, avg(amt) as avg from Users u join transactions t on u.user_id=t.user_id group by state;";
+  db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(results);
+  });
+});
+
+app.post("/refill", (req, res) => {
+  let sql =
+    "delete from prod_left; ALTER TABLE prod_left AUTO_INCREMENT = 1; insert into prod_left (user_id, prod_id,qty) select u.user_id, prod_id, qty from users u join prod_for_cards pc where u.income_range= pc.income_range;";
+  db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json("Refilled");
+  });
+});
+
+app.post("/refillCard", (req, res) => {
+  let sql = `delete from prod_left where user_id in (Select u.user_id from users u join prod_for_cards pc on u.income_range=pc.income_range and pc.income_range='${req.body.income_range}'); insert into prod_left (user_id, prod_id,qty) select u.user_id, prod_id, qty from users u join prod_for_cards pc where u.income_range= pc.income_range and pc.income_range='${req.body.income_range}';`;
+  db.query(sql, (err, results) => {
+    if (err) console.log(err);
+    else res.json(`Refilled for ${req.body.id}`);
+  });
+});
 app.listen(PORT, () => console.log("Server is running on Port: " + PORT));
