@@ -58,7 +58,6 @@ function Main() {
             .get(path)
             .then((res) => {
               setUserDetails({ ...e, user_id: res.data[0].user_id });
-              console.log(user);
               f.map((x) => {
                 let member = {
                   aadhar: x.aadhar,
@@ -137,7 +136,6 @@ function Main() {
     var d = new Date();
     var datetime =
       d.toISOString().split("T")[0] + " " + d.toTimeString().split(" ")[0];
-    console.log(datetime);
     let trans = {
       user_id: user.user_id,
       amt: total,
@@ -151,7 +149,7 @@ function Main() {
     cart.map((x) => {
       let path = "http://localhost:4000/prodUser/" + user.user_id;
       let y = { qty: x.allowedQuantity - x.quantity, name: x.name };
-      console.log(y);
+
       axios
         .post(path, y)
         .then((res) => {
@@ -318,7 +316,17 @@ function Main() {
 
         <Route path="/cards" render={() => <Cards card={openCard} />} />
         <Route path="/card" render={() => <Card card={card} />} />
-        <Route path="/profile" render={() => <Profile userDet={user} />} />
+        <Route
+          path="/profile"
+          render={() => (
+            <Profile
+              userDet={user}
+              userAuth={setUserAuthentication}
+              adminAuth={setAdminAuthentication}
+              setUser={setUserDetails}
+            />
+          )}
+        />
         <Route path="/addCard" render={() => <AddCard />} />
         <Route path="/products" render={() => <Products />} />
         <Route path="/addProduct" render={() => <AddProduct />} />

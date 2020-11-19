@@ -12,7 +12,6 @@ function UserTrans(props) {
         let path = "http://localhost:4000/trans/" + props.userid;
         axios.get(path).then(function (res) {
           setResp(res.data);
-          console.log(res.data);
         });
       } catch (error) {
         if (axios.isCancel(error)) {

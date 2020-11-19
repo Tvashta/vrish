@@ -152,6 +152,7 @@ export default function UserStats() {
           res.data.map((x) => {
             z.push(x.city);
             if (!y.includes(x.state)) y.push(x.state);
+            return null;
           });
           let t = [];
           y.map((x) => {
@@ -163,21 +164,24 @@ export default function UserStats() {
                 count: y.count,
               });
               st.find((c) => c.state === x).value += y.count;
+              return null;
             });
             t.push(b);
+            return null;
           });
           setData(st);
           setRes(t);
           data1.map((x) => {
-            let i = states.indexOf(states.find((y) => y == x.state));
+            let i = states.indexOf(states.find((y) => y === x.state));
             let c = 0;
-            if (i == -1) c = cities[2].split("|").length / 2;
-            else if (i == 2) c = cities[2].split("|").length / 2;
+            if (i === -1) c = cities[2].split("|").length / 2;
+            else if (i === 2) c = cities[2].split("|").length / 2;
             else c = cities[i].split("|").length;
             x.value = c;
+            return null;
           });
         });
-        console.log(data1);
+        setData1(data1);
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log("cancelled");
@@ -190,7 +194,7 @@ export default function UserStats() {
     return () => {
       source.cancel();
     };
-  }, []);
+  }, [data1, data]);
   return (
     <div>
       <div className="userStats">

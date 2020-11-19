@@ -8,7 +8,6 @@ import "jspdf-autotable";
 
 export default function Gender() {
   const [res, setRes] = useState([]);
-
   const [maxs, setMaxs] = useState([0, 0, 0]);
   const [mins, setMins] = useState(["", "", ""]);
   const [sums, setSums] = useState([0, 0, 0]);
@@ -23,6 +22,9 @@ export default function Gender() {
         var fmin, mmin, tmin, fm, tm, mm;
         fmin = mmin = tmin = Infinity;
         fm = tm = mm = 0;
+        setMaxs([0, 0, 0]);
+        setMins([0, 0, 0]);
+        setSums([0, 0, 0]);
         axios.get("http://localhost:4000/userGender").then(function (res) {
           let st = {};
           res.data.map((x) => {

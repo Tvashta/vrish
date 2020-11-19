@@ -56,13 +56,37 @@ app
     });
   });
 
-app.get("/users/:aadhar", (req, res) => {
-  let sql = "SELECT user_id from users where aadhar=" + req.params.aadhar;
-  let query = db.query(sql, (err, results) => {
-    if (err) console.log(err);
-    else res.json(results);
+app
+  .route("/users/:aadhar")
+  .get((req, res) => {
+    let sql = "SELECT user_id from users where aadhar=" + req.params.aadhar;
+    let query = db.query(sql, (err, results) => {
+      if (err) console.log(err);
+      else res.json(results);
+    });
+  })
+  .delete((req, res) => {
+    let sql =
+      " DELETE from family where user_id=" +
+      req.params.aadhar +
+      "; DELETE from prod_left where user_id =" +
+      req.params.aadhar +
+      "; DELETE from transactions where user_id =" +
+      req.params.aadhar +
+      "; DELETE from users where user_id =" +
+      req.params.aadhar;
+    db.query(sql, (err, results) => {
+      if (err) console.log(err);
+      else res.json("User Deleted");
+    });
+  })
+  .put((req, res) => {
+    let sql = "UPDATE users SET ? where user_id =" + req.params.aadhar;
+    let query = db.query(sql, req.body, (err, results) => {
+      if (err) console.log(err);
+      else res.json("Updated user details");
+    });
   });
-});
 
 app.get("/username/:uname", (req, res) => {
   let sql = "SELECT * from users where username='" + req.params.uname + "'";
@@ -175,6 +199,23 @@ app.route("/family").post((req, res) => {
     else res.json("Family member added!");
   });
 });
+
+app
+  .route("/family/:id")
+  .get((req, res) => {
+    let sql = "SELECT * from family where user_id = " + req.params.id;
+    db.query(sql, (err, results) => {
+      if (err) console.log(err);
+      else res.json(results);
+    });
+  })
+  .delete((req, res) => {
+    let sql = "DELETE FROM family where user_id = " + req.params.id;
+    db.query(sql, (err, results) => {
+      if (err) console.log(err);
+      else res.json("Deleted");
+    });
+  });
 
 app
   .route("/trans")

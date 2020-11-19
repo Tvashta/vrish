@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import img1 from "../images/girl.png";
 import img2 from "../images/boy.png";
 import { Add } from "@material-ui/icons";
@@ -8,6 +8,7 @@ import { cities, states } from "./utilities/cities";
 import axios from "axios";
 function Register(props) {
   const [response, setResp] = useState([]);
+  const [redirect, setRedirect] = useState(false);
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
@@ -75,7 +76,6 @@ function Register(props) {
   }
 
   function addMember() {
-    console.log(member);
     if (member.name.length && member.aadhar.length === 12) {
       setfamily([...family, member]);
       setmember({
@@ -109,7 +109,7 @@ function Register(props) {
     if (name === "confpwd") {
       if (value !== pwd) setconfpwd(true);
       else setconfpwd(false);
-    } else setUserDetails({ ...user, [name]: value });
+    } else if (name !== "password") setUserDetails({ ...user, [name]: value });
     if (value.length === 0) setErr({ ...error, gen: "Enter all fields!" });
     else setErr({ ...error, gen: "" });
     if (name === "ph_no")
@@ -124,8 +124,16 @@ function Register(props) {
           [name]: "Password must be atleast 8 characters long",
         });
       else setErr({ ...error, [name]: "" });
+    } else if (name === "username") {
+      var format = /[`!@#$%^&*()+\-=\]{};':"\\|,<>?~]/;
+      if (format.test(value)) {
+        setErr({
+          ...error,
+          [name]:
+            "Username can't contain special characters except dot(.) or underline (_)",
+        });
+      } else setErr({ ...error, [name]: "" });
     }
-
     if (
       (user.email.length > 0 &&
         user.username.length > 0 &&
@@ -146,10 +154,12 @@ function Register(props) {
 
   return (
     <div className="wrapper">
+      {redirect && <Redirect to="/home" />}
       <div className="inner">
         <img src={img1} alt="" className="image-1" />
         <form className="reg-form" action="">
           <h3 className="reg-h3">{regText}</h3>
+          <p>{error.username}</p>
           <div className="form-holder">
             <span className="lnr lnr-user"></span>
             <input
@@ -332,25 +342,29 @@ function Register(props) {
             </div>
           )}
           {ok && (
-            <Link to="/home">
-              <button
-                className="reg-button"
-                onClick={() => {
-                  let p = "http://localhost:4000/username/" + user.username;
-                  reg
-                    ? props.setDetails(user, family, reg)
-                    : axios
-                        .get(p)
-                        .then((res) =>
-                          props.setDetails(res.data[0], family, reg)
-                        )
-                        .catch((err) => console.log(err));
-                  props.userAuth(true);
-                }}
-              >
-                <span>{regText}</span>
-              </button>
-            </Link>
+            <button
+              className="reg-button"
+              onClick={(e) => {
+                e.preventDefault();
+                let p = "http://localhost:4000/username/" + user.username;
+                reg
+                  ? props.setDetails(user, family, reg)
+                  : axios
+                      .get(p)
+                      .then((res) => {
+                        props.setDetails(res.data[0], family, reg);
+                        props.userAuth(true);
+                        setRedirect(true);
+                      })
+                      .catch((err) => {
+                        setErr({ ...error, username: "Invalid credentials" });
+                      });
+                reg && props.userAuth(true);
+                reg && setRedirect(true);
+              }}
+            >
+              <span>{regText}</span>
+            </button>
           )}
           <table>
             <tbody>

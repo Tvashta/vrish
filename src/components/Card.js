@@ -3,7 +3,6 @@ import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 export default function Card(props) {
   let card = props.card;
-  console.log(props);
   const [show1, setShow1] = useState(false);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);

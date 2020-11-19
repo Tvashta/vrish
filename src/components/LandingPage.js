@@ -38,6 +38,13 @@ function LandingPage(props) {
 
     const loadData = () => {
       try {
+        // setMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        // setTransC({
+        //   id: "Transactions",
+        //   data: [],
+        // });
+        // setItem([]);
+        // setTrans([{ x: 0, y: 0 }]);
         let path = "http://localhost:4000/prodCard/" + props.user.income_range;
         axios.get(path).then(function (res) {
           res.data.map((x) => item.push(x.name));
@@ -100,7 +107,6 @@ function LandingPage(props) {
       });
 
       item.map((x) => {
-        console.log(items1, x);
         if (!items1.includes(x)) {
           items1.push(x);
           prod.push([

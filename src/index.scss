@@ -598,6 +598,11 @@ ul {
 .col {
   padding: 0;
 }
+.col1 {
+  width: fit-content;
+  margin: 0 30px;
+  padding: 0;
+}
 
 .prod {
   padding: 5%;
@@ -974,4 +979,19 @@ ul {
   h2 {
     text-align: center;
   }
+}
+
+.inner1 {
+  padding: 50px;
+}
+
+.btn.dltbtn {
+  margin: 10px;
+  position: absolute;
+  display: inline;
+  right: 100px;
+}
+
+p.user-ip {
+  border: none;
 }
