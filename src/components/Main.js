@@ -302,7 +302,13 @@ function Main() {
         />
         <Route
           path="/home"
-          render={() => <LandingPage user={user} setItems={setItems} />}
+          render={() =>
+            isUserAuthenticated ? (
+              <LandingPage user={user} setItems={setItems} />
+            ) : (
+              <Redirect to="/register" />
+            )
+          }
         />
         <Route path="/adminHome" render={() => <Admin />} />
         <Route

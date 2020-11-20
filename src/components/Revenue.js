@@ -101,7 +101,7 @@ export default function Revenue() {
     setTooltipContent("");
   };
 
-  const colorScale = scaleQuantile().domain([0, 50]).range(COLOR_RANGE);
+  const colorScale = scaleQuantile().domain([0, 100]).range(COLOR_RANGE);
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;

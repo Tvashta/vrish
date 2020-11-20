@@ -137,7 +137,9 @@ export default function UserStats() {
     setTooltipContent("");
   };
 
-  const colorScale = scaleQuantile().domain([0, 1, 2, 3, 4]).range(COLOR_RANGE);
+  const colorScale = scaleQuantile()
+    .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    .range(COLOR_RANGE);
   const colorScale1 = scaleQuantile().domain([0, 300]).range(COLOR_RANGE);
   useEffect(() => {
     const CancelToken = axios.CancelToken;

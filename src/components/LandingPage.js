@@ -32,6 +32,7 @@ function LandingPage(props) {
   const [prodCons, setProdCons] = useState([]);
   const [items, setItems] = useState([]);
   const [transactions, setTransactions] = useState([]);
+
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
